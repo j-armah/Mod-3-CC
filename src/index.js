@@ -159,7 +159,7 @@ beerReviews.addEventListener("click", event => {
             //console.log(newObj)
             displayBeer(newObj.id)
         })
-        event.target.reset()
+        //event.target.reset()
     }
 })
 
