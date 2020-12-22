@@ -1,6 +1,7 @@
 // Code here
 
 const beerDetails = document.querySelector(".beer-details")
+const descForm = document.querySelector(".description")
 
 function displayFirstBeer (beer) {
     let beerH2 = document.querySelector(".beer-details h2")
@@ -28,5 +29,32 @@ function fetchFirstBeer () {
             displayFirstBeer(beer)
         })
 }
+
+// Event Listeners
+
+descForm.addEventListener("submit", event => {
+    event.preventDefault()
+
+    let newDescription = document.querySelector(".beer-details textarea").value
+
+    newBeerObj = {
+        description : newDescription,
+    }
+
+    //console.log(newBeerObj)
+    
+    fetch("http://localhost:3000/beers/1", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newBeerObj)
+    })
+    .then(response => response.json())
+    .then(updBeerObj => {
+        console.log(updBeerObj)
+        displayFirstBeer(updBeerObj)
+    })
+})
 
 fetchFirstBeer()
