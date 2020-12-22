@@ -19,6 +19,7 @@ function displayBeer (beerId) {
                 beerImg.src = beer.image_url
 
             let beerDesc = document.querySelector(".beer-details textarea")
+            beerDesc.textContent = ''
             beerDesc.textContent = beer.description
 
             beerReviews.innerHTML = ''
@@ -40,6 +41,7 @@ function fetchFirstBeer () {
         })
 }
 
+// initial fetch all beer for nav bar
 function fetchBeers () {
     fetch("http://localhost:3000/beers")
         .then(response => response.json())
@@ -47,12 +49,16 @@ function fetchBeers () {
             console.log(beers)
             beersGlobalArray = beers
             displayBeersNav(beers)
+
             // So first beer shows, set = to first in array, maybe id 1 is gone
-            initialId = beers[0].id
+            let initialId = beers[0].id
+            reviewForm.dataset.id = beers[0].id
+            descForm.dataset.id = beers[0].id
             displayBeer(initialId)
         })
 }
 
+// render beer nav bar
 function displayBeersNav(beersArray) {
     beerList.innerHTML = ''
     beersArray.forEach(beer => {
@@ -64,20 +70,18 @@ function displayBeersNav(beersArray) {
     })
 }
 
-// function addReview(beerObj) {
-
-// }
 
 // Event Listeners
 
 beerList.addEventListener("click", event => {
     beerId = event.target.dataset.id
     //console.log(beerId)
-    displayBeer(beerId)
     reviewForm.dataset.id = beerId
     descForm.dataset.id = beerId
+    displayBeer(beerId)
 })
 
+// Persist reviews
 reviewForm.addEventListener("submit", event => {
     event.preventDefault()
     let id = reviewForm.dataset.id
@@ -97,16 +101,9 @@ reviewForm.addEventListener("submit", event => {
     })
     .then(response => response.json())
     .then(newObj => {
-        console.log(newObj)
+        //console.log(newObj)
         displayBeer(newObj.id)
     })
-
-    // let li = document.createElement("li")
-    //     li.textContent = newReview
-
-    // beerReviews.append(li)
-
-
 })
 
 
@@ -133,6 +130,10 @@ descForm.addEventListener("submit", event => {
         console.log(updBeerObj)
         displayBeer(updBeerObj.id)
     })
+})
+
+beerReviews.addEventListener("click", event => {
+    
 })
 
 //fetchFirstBeer()
