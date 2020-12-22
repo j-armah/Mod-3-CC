@@ -1,13 +1,15 @@
 // Code here
 
+// Global Variables
 const beerDetails = document.querySelector(".beer-details")
 const descForm = document.querySelector(".description")
 const reviewForm = document.querySelector(".review-form")
 let beerReviews = document.querySelector(".reviews")
 const beerList = document.querySelector("#beer-list")
+let beersGlobalArray = []
 
+// This was displayFirstBeer (core deliv), changed for adv deliv
 function displayBeer (beerId) {
-
     fetch(`http://localhost:3000/beers/${beerId}`)
         .then(response => response.json())
         .then(beer => {
@@ -28,6 +30,7 @@ function displayBeer (beerId) {
         })       
 }
 
+// not used in adv deliv, core deliv
 function fetchFirstBeer () {
     fetch("http://localhost:3000/beers/1")
         .then(response => response.json())
@@ -42,7 +45,11 @@ function fetchBeers () {
         .then(response => response.json())
         .then(beers => {
             console.log(beers)
+            beersGlobalArray = beers
             displayBeersNav(beers)
+            // So first beer shows, set = to first in array, maybe id 1 is gone
+            initialId = beers[0].id
+            displayBeer(initialId)
         })
 }
 
@@ -67,16 +74,39 @@ beerList.addEventListener("click", event => {
     beerId = event.target.dataset.id
     //console.log(beerId)
     displayBeer(beerId)
+    reviewForm.dataset.id = beerId
+    descForm.dataset.id = beerId
 })
 
 reviewForm.addEventListener("submit", event => {
     event.preventDefault()
+    let id = reviewForm.dataset.id
     let newReview = document.querySelector(".review-form textarea").value
-    console.log(newReview)
-    let li = document.createElement("li")
-        li.textContent = newReview
+    
+    let reviewArray = beersGlobalArray.find(beer =>  beer.id === parseInt(id)).reviews
+    reviewArray.push(newReview)
+    
+    fetch(`http://localhost:3000/beers/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            reviews : reviewArray
+        })
+    })
+    .then(response => response.json())
+    .then(newObj => {
+        console.log(newObj)
+        displayBeer(newObj.id)
+    })
 
-    beerReviews.append(li)
+    // let li = document.createElement("li")
+    //     li.textContent = newReview
+
+    // beerReviews.append(li)
+
+
 })
 
 
@@ -101,9 +131,9 @@ descForm.addEventListener("submit", event => {
     .then(response => response.json())
     .then(updBeerObj => {
         console.log(updBeerObj)
-        displayFirstBeer(updBeerObj)
+        displayBeer(updBeerObj.id)
     })
 })
 
-fetchFirstBeer()
+//fetchFirstBeer()
 fetchBeers()
