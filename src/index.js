@@ -10,6 +10,7 @@ let beersGlobalArray = []
 
 // This was displayFirstBeer (core deliv), changed for adv deliv
 function displayBeer (beerId) {
+    
     fetch(`http://localhost:3000/beers/${beerId}`)
         .then(response => response.json())
         .then(beer => {
@@ -19,13 +20,13 @@ function displayBeer (beerId) {
                 beerImg.src = beer.image_url
 
             let beerDesc = document.querySelector(".beer-details textarea")
-            beerDesc.textContent = ''
-            beerDesc.textContent = beer.description
+            beerDesc.value = beer.description
 
             beerReviews.innerHTML = ''
             beer.reviews.forEach(review => {
                 let li = document.createElement("li")
                     li.textContent = review
+                    li.dataset.id = beer.id
                 beerReviews.append(li)
             })  
         })       
@@ -111,6 +112,7 @@ descForm.addEventListener("submit", event => {
     event.preventDefault()
 
     let newDescription = document.querySelector(".beer-details textarea").value
+    let id = descForm.dataset.id
 
     newBeerObj = {
         description : newDescription,
@@ -118,7 +120,7 @@ descForm.addEventListener("submit", event => {
 
     //console.log(newBeerObj)
     
-    fetch("http://localhost:3000/beers/1", {
+    fetch(`http://localhost:3000/beers/${id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -127,13 +129,18 @@ descForm.addEventListener("submit", event => {
     })
     .then(response => response.json())
     .then(updBeerObj => {
-        console.log(updBeerObj)
+        //console.log(updBeerObj)
         displayBeer(updBeerObj.id)
     })
 })
 
+// Not persisting review delete
 beerReviews.addEventListener("click", event => {
-    
+    // no persist, clicking on review deletes it from DOM
+    if (event.target.matches("li")) {
+        event.target.remove()
+
+    }
 })
 
 //fetchFirstBeer()
