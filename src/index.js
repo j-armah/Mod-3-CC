@@ -138,9 +138,32 @@ descForm.addEventListener("submit", event => {
 beerReviews.addEventListener("click", event => {
     // no persist, clicking on review deletes it from DOM
     if (event.target.matches("li")) {
-        event.target.remove()
+        //event.target.remove()
+        let liContent = event.target.textContent
+        
+        let id = reviewForm.dataset.id
+        let reviewArray = beersGlobalArray.find(beer =>  beer.id === parseInt(id)).reviews
 
+        
+        newReviewArray = reviewArray.filter(item => item != liContent)
+
+        fetch(`http://localhost:3000/beers/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                reviews : newReviewArray
+            })
+        })
+        .then(response => response.json())
+        .then(newObj => {
+        //console.log(newObj)
+        displayBeer(newObj.id)
+    })
+        
     }
+    
 })
 
 //fetchFirstBeer()
