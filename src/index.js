@@ -1,4 +1,3 @@
-// Code here
 
 // Global Variables
 const beerDetails = document.querySelector(".beer-details")
@@ -10,7 +9,6 @@ let beersGlobalArray = []
 
 // This was displayFirstBeer (core deliv), changed for adv deliv
 function displayBeer (beerId) {
-    
     fetch(`http://localhost:3000/beers/${beerId}`)
         .then(response => response.json())
         .then(beer => {
@@ -32,7 +30,7 @@ function displayBeer (beerId) {
         })       
 }
 
-// not used in adv deliv, core deliv
+// Not used in adv deliv, core deliv
 function fetchFirstBeer () {
     fetch("http://localhost:3000/beers/1")
         .then(response => response.json())
@@ -42,7 +40,7 @@ function fetchFirstBeer () {
         })
 }
 
-// initial fetch all beer for nav bar
+// Initial fetch all beer for nav bar
 function fetchBeers () {
     fetch("http://localhost:3000/beers")
         .then(response => response.json())
@@ -59,7 +57,7 @@ function fetchBeers () {
         })
 }
 
-// render beer nav bar
+// Render beer nav bar
 function displayBeersNav(beersArray) {
     beerList.innerHTML = ''
     beersArray.forEach(beer => {
@@ -72,7 +70,7 @@ function displayBeersNav(beersArray) {
 }
 
 
-// Event Listeners
+// ***** Event Listeners *****//
 
 beerList.addEventListener("click", event => {
     beerId = event.target.dataset.id
@@ -82,7 +80,7 @@ beerList.addEventListener("click", event => {
     displayBeer(beerId)
 })
 
-// Persist reviews
+// Persist and Add reviews
 reviewForm.addEventListener("submit", event => {
     event.preventDefault()
     let id = reviewForm.dataset.id
@@ -108,6 +106,7 @@ reviewForm.addEventListener("submit", event => {
 })
 
 
+// Update desc
 descForm.addEventListener("submit", event => {
     event.preventDefault()
 
@@ -134,9 +133,8 @@ descForm.addEventListener("submit", event => {
     })
 })
 
-// Not persisting review delete
+// Delete review with persistence 
 beerReviews.addEventListener("click", event => {
-    // no persist, clicking on review deletes it from DOM
     if (event.target.matches("li")) {
         //event.target.remove()
         let liContent = event.target.textContent
@@ -158,12 +156,11 @@ beerReviews.addEventListener("click", event => {
         })
         .then(response => response.json())
         .then(newObj => {
-        //console.log(newObj)
-        displayBeer(newObj.id)
-    })
-        
+            //console.log(newObj)
+            displayBeer(newObj.id)
+        })
+        event.target.reset()
     }
-    
 })
 
 //fetchFirstBeer()
