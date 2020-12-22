@@ -2,6 +2,8 @@
 
 const beerDetails = document.querySelector(".beer-details")
 const descForm = document.querySelector(".description")
+const reviewForm = document.querySelector(".review-form")
+let beerReviews = document.querySelector(".reviews")
 
 function displayFirstBeer (beer) {
     let beerH2 = document.querySelector(".beer-details h2")
@@ -13,7 +15,7 @@ function displayFirstBeer (beer) {
         beerDesc.textContent = beer.description
 
     beer.reviews.forEach(review => {
-        let beerReviews = document.querySelector(".reviews")
+        
         let li = document.createElement("li")
             li.textContent = review
         beerReviews.append(li)
@@ -30,7 +32,22 @@ function fetchFirstBeer () {
         })
 }
 
+// function addReview(beerObj) {
+
+// }
+
 // Event Listeners
+
+reviewForm.addEventListener("submit", event => {
+    event.preventDefault()
+    let newReview = document.querySelector(".review-form textarea").value
+    console.log(newReview)
+    let li = document.createElement("li")
+        li.textContent = newReview
+
+    beerReviews.append(li)
+})
+
 
 descForm.addEventListener("submit", event => {
     event.preventDefault()
